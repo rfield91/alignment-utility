@@ -63,10 +63,11 @@ export const WheelToe = ({
       </div>
       <div className="flex flex-col gap-0.5">
         <div>
-          Target: {targetToeHalf / 25.4}&quot; {targetDetails.direction}
+          Target: {(targetToeHalf / 25.4).toFixed(3)}&quot;{" "}
+          {targetDetails.direction}
         </div>
         <div>
-          Current: {measuredDetails.measuredToe / 25.4}&quot;{" "}
+          Current: {(measuredDetails.measuredToe / 25.4).toFixed(3)}&quot;{" "}
           {measuredDetails.direction}
         </div>
         <div>
