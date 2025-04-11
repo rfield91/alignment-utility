@@ -1,3 +1,5 @@
+import { ChangeDirection, ChangeMagnitude, ToeDetails } from "@/types/types";
+
 export const getScaledAngle = (delta: number) => {
   const angle = Math.sin(Math.abs(delta) / 18);
 
@@ -36,8 +38,8 @@ export const getToeDetailsFromMeasurement = (
 
   return {
     degrees: getDegreesForWheel(scaledAngle, direction, toeInDirection),
-    measuredToe: measuredToInMm,
     direction: direction,
+    value: measuredToInMm,
   };
 };
 
@@ -52,16 +54,40 @@ export const getToeDetailsFromTarget = (
   return {
     degrees: getDegreesForWheel(scaledAngle, direction, toeInDirection),
     direction: direction,
-    targetWheelToe: targetWheelToe,
+    value: targetWheelToe,
   };
 };
 
-export const getToeChangeDirection = (
-  measuredToe: number,
-  targetToe: number
+export const getToeRequiredChangeDetails = (
+  measured: ToeDetails,
+  target: ToeDetails
 ) => {
-  if (measuredToe === targetToe) return "MATCH";
-  if (measuredToe < targetToe) return "ADDTOEOUT";
+  const changeDirectionLookup = {
+    MATCH: "",
+    ADDTOEIN: "Add toe in",
+    ADDTOEOUT: "Add toe out",
+  };
 
-  return "ADDTOEIN";
+  let changeDirection: ChangeDirection = "MATCH";
+
+  if (measured.direction === "IN" && target.direction === "OUT")
+    changeDirection = "ADDTOEOUT";
+  else if (measured.direction === "OUT" && target.direction === "IN")
+    changeDirection = "ADDTOEIN";
+  else if (measured.value === target.value) changeDirection = "MATCH";
+  else if (measured.value < target.value) changeDirection = "ADDTOEOUT";
+  else changeDirection = "ADDTOEIN";
+
+  let magnitude: ChangeMagnitude = "MATCH";
+
+  const targetVsMeasuredDelta = measured.value - target.value;
+
+  if (Math.abs(targetVsMeasuredDelta) <= 0.2) magnitude = "MATCH";
+  else if (Math.abs(targetVsMeasuredDelta) <= 0.5) magnitude = "CLOSE";
+  else magnitude = "MISMATCH";
+
+  return {
+    direction: changeDirectionLookup[changeDirection],
+    magnitude: magnitude,
+  };
 };

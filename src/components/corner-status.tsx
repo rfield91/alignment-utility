@@ -1,7 +1,8 @@
+import { ChangeMagnitude } from "@/types/types";
 import { cn } from "@/utilities/cn";
 
 const StatusVariants = {
-  MATCHED: {
+  MATCH: {
     color: "bg-green-600",
     text: "Match",
   },
@@ -9,30 +10,28 @@ const StatusVariants = {
     color: "bg-yellow-600",
     text: "Close",
   },
-  MISMATCHED: {
+  MISMATCH: {
     color: "bg-red-600",
     text: "Mismatched",
   },
 } as const;
 
-export type Status = keyof typeof StatusVariants;
-
 export const CornerStatus = ({
-  status,
+  magnitude,
   text,
 }: {
-  status: Status;
+  magnitude: ChangeMagnitude;
   text: string;
 }) => {
-  if (status in StatusVariants) {
+  if (magnitude in StatusVariants) {
     return (
       <span
         className={cn(
-          "inline-block rounded-full px-3 py-2 text-white",
-          StatusVariants[status].color
+          "inline-block rounded-full px-1 py-1 lg:px-3 lg:py-2 text-white uppercase text-xs font-semibold lg:tracking-wider",
+          StatusVariants[magnitude].color
         )}
       >
-        {status !== "MATCHED" ? text : StatusVariants[status].text}
+        {magnitude !== "MATCH" ? text : StatusVariants[magnitude].text}
       </span>
     );
   }

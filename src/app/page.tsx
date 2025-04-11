@@ -79,19 +79,17 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col items-center justify-center gap-10">
-        <AxleToe
-          axle={vehicle.toeSetup["FRONT"]}
-          handleWheelMeasurementChange={handleWheelMeasurementChange}
-          handleTargetToeChange={handleTargetToeChange}
-        />
-        <AxleToe
-          axle={vehicle.toeSetup["REAR"]}
-          handleWheelMeasurementChange={handleWheelMeasurementChange}
-          handleTargetToeChange={handleTargetToeChange}
-        />
-      </main>
-    </div>
+    <main className="flex flex-col items-center justify-center gap-10 h-screen">
+      <AxleToe
+        axle={vehicle.toeSetup["FRONT"]}
+        handleWheelMeasurementChange={handleWheelMeasurementChange}
+        handleTargetToeChange={handleTargetToeChange}
+      />
+      <AxleToe
+        axle={vehicle.toeSetup["REAR"]}
+        handleWheelMeasurementChange={handleWheelMeasurementChange}
+        handleTargetToeChange={handleTargetToeChange}
+      />
+    </main>
   );
 }

@@ -19,13 +19,11 @@ export const AxleToe = ({
 }: AxleToeProps) => {
   return (
     <div className="flex flex-col gap-5">
-      <div className="flex flex-col w-1/4 mx-auto gap-2">
-        <TargetToeInput
-          axle={axle}
-          handleTargetToeChange={handleTargetToeChange}
-        />
-      </div>
-      <div className="flex gap-28">
+      <TargetToeInput
+        axle={axle}
+        handleTargetToeChange={handleTargetToeChange}
+      />
+      <div className="flex gap-10 lg:gap-28">
         {Object.keys(axle.wheels).map((wheel) => (
           <WheelToe
             key={axle.wheels[wheel].cornerKey}

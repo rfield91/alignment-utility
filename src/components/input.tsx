@@ -9,7 +9,7 @@ export const Input = ({ label, ...props }: InputProps) => {
     <div className="flex gap-2 items-baseline">
       <input
         className={cn(
-          `w-full border-0 border-b-2 border-gray-400 focus:border-orange-500 focus:ring-0 focus:outline-none text-right p-1 text-xl`,
+          `w-full border-0 border-b-2 border-gray-400 focus:border-orange-500 focus:ring-0 focus:outline-none text-right px-1 pt-1 lg:text-xl`,
           props.className
         )}
         {...props}

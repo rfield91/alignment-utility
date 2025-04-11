@@ -1,10 +1,10 @@
-import { CornerStatus, Status } from "@/components/corner-status";
+import { CornerStatus } from "@/components/corner-status";
 import { WheelMeasurement } from "@/components/wheel-measurement";
 import { WheelConfiguration } from "@/types/types";
 import {
-  getToeChangeDirection,
   getToeDetailsFromMeasurement,
   getToeDetailsFromTarget,
+  getToeRequiredChangeDetails,
 } from "@/utilities/toe-calculations";
 
 type WheelToeProps = {
@@ -33,52 +33,38 @@ export const WheelToe = ({
 
   const targetDetails = getToeDetailsFromTarget(targetToeHalf, toeInDirection);
 
-  const targetVsMeasuredDelta =
-    measuredDetails.measuredToe - targetDetails.targetWheelToe;
-  let status: Status = "MATCHED";
-
-  if (targetVsMeasuredDelta === 0) status = "MATCHED";
-  else if (Math.abs(targetVsMeasuredDelta) <= 0.5) status = "CLOSE";
-  else status = "MISMATCHED";
-
-  const requiredToeChangeDirection = getToeChangeDirection(
-    measuredDetails.measuredToe,
-    targetDetails.targetWheelToe
+  const requiredChange = getToeRequiredChangeDetails(
+    measuredDetails,
+    targetDetails
   );
 
-  const changeDirectionLookup = {
-    MATCH: "",
-    ADDTOEIN: "Add toe in",
-    ADDTOEOUT: "Add toe out",
-  };
-
-  if (wheelConfiguration.cornerKey === "LF") {
-    console.log(measuredDetails, targetDetails, requiredToeChangeDirection);
+  if (wheelConfiguration.cornerKey === "RF") {
+    console.log(measuredDetails, requiredChange);
   }
 
   return (
     <div className="flex flex-col gap-5 text-center">
-      <div className="text-xl text-center font-bold">
+      <div className="lg:text-xl text-center font-bold">
         {wheelConfiguration.cornerName}
       </div>
-      <div className="flex flex-col gap-0.5">
+      <div className="flex flex-col gap-1 text-sm">
         <div>
           Target: {(targetToeHalf / 25.4).toFixed(3)}&quot;{" "}
           {targetDetails.direction}
         </div>
         <div>
-          Current: {(measuredDetails.measuredToe / 25.4).toFixed(3)}&quot;{" "}
+          Current: {(measuredDetails.value / 25.4).toFixed(3)}&quot;{" "}
           {measuredDetails.direction}
         </div>
-        <div>
+        {/* <div>
           <CornerStatus
             status={status}
             text={changeDirectionLookup[requiredToeChangeDirection]}
           />
-        </div>
+        </div> */}
       </div>
       <div
-        className={`flex justify-between gap-10 ${
+        className={`flex justify-between lg:gap-10 ${
           side == "LEFT" ? "flex-row" : "flex-row-reverse"
         }`}
       >
@@ -106,15 +92,22 @@ export const WheelToe = ({
             }
           />
         </div>
-        <div className="grid mx-auto">
+        <div className="grid mx-auto items-center">
           <div
-            className="h-64 col-start-1 row-start-1 bg-green-400 w-36"
+            className="h-32 w-16 lg:h-64 lg:w-36 col-start-1 row-start-1 bg-green-400 "
             style={{ transform: `rotate(${targetDetails.degrees}deg)` }}
           ></div>
           <div
-            className="h-64 col-start-1 row-start-1 bg-gray-800 w-36"
+            className="h-32 w-16 lg:h-64 lg:w-36 col-start-1 row-start-1 bg-gray-800 flex items-center justify-center transition-all"
             style={{ transform: `rotate(${measuredDetails.degrees}deg)` }}
-          ></div>
+          >
+            <div>
+              <CornerStatus
+                magnitude={requiredChange.magnitude}
+                text={requiredChange.direction}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>

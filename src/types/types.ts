@@ -18,3 +18,12 @@ export type Vehicle = {
     [axle: string]: AxleConfiguration;
   };
 };
+
+export type ToeDetails = {
+  degrees: number | undefined;
+  direction: string;
+  value: number;
+};
+
+export type ChangeDirection = "MATCH" | "ADDTOEIN" | "ADDTOEOUT";
+export type ChangeMagnitude = "MATCH" | "CLOSE" | "MISMATCH";
