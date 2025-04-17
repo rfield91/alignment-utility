@@ -1,7 +1,7 @@
 import { ChangeDirection, ChangeMagnitude, ToeDetails } from "@/types/types";
 
-export const getScaledAngle = (delta: number) => {
-  const angle = Math.sin(Math.abs(delta) / 18);
+export const getScaledAngle = (delta: number, wheelDiameter: number) => {
+  const angle = Math.sin(Math.abs(delta) / wheelDiameter);
 
   const scaledAngle = angle * 100;
 
@@ -23,13 +23,14 @@ export const getDegreesForWheel = (
 export const getToeDetailsFromMeasurement = (
   frontOfWheel: number,
   rearOfWheel: number,
-  toeInDirection: string
+  toeInDirection: string,
+  wheelDiameter: number
 ) => {
   const direction = frontOfWheel > rearOfWheel ? "IN" : "OUT";
 
   const delta = Math.abs(frontOfWheel - rearOfWheel);
 
-  const scaledAngle = getScaledAngle(delta);
+  const scaledAngle = getScaledAngle(delta, wheelDiameter);
 
   const measuredToInMm =
     direction === "IN"
@@ -45,11 +46,12 @@ export const getToeDetailsFromMeasurement = (
 
 export const getToeDetailsFromTarget = (
   targetWheelToe: number,
-  toeInDirection: string
+  toeInDirection: string,
+  wheelDiameter: number
 ) => {
   const direction = targetWheelToe < 0 ? "IN" : "OUT";
 
-  const scaledAngle = getScaledAngle(targetWheelToe);
+  const scaledAngle = getScaledAngle(targetWheelToe, wheelDiameter);
 
   return {
     degrees: getDegreesForWheel(scaledAngle, direction, toeInDirection),

@@ -15,7 +15,8 @@ export default function Home() {
     toeSetup: {
       FRONT: {
         axleKey: "FRONT",
-        wheels: {
+        wheelDiameter: 17,
+        corners: {
           LF: {
             cornerKey: "LF",
             cornerName: "Left Front",
@@ -33,7 +34,8 @@ export default function Home() {
       },
       REAR: {
         axleKey: "REAR",
-        wheels: {
+        wheelDiameter: 17,
+        corners: {
           LR: {
             cornerKey: "LR",
             cornerName: "Left Rear",
@@ -59,10 +61,10 @@ export default function Home() {
   ) => {
     const toeUpdates = { ...vehicle.toeSetup };
     Object.keys(vehicle.toeSetup).forEach((axle) => {
-      Object.keys(toeUpdates[axle].wheels).forEach((wheel) => {
-        if (toeUpdates[axle].wheels[wheel].cornerKey == cornerKey) {
-          toeUpdates[axle].wheels[wheel].frontOfWheel = frontOfWheel;
-          toeUpdates[axle].wheels[wheel].rearOfWheel = rearOfWheel;
+      Object.keys(toeUpdates[axle].corners).forEach((wheel) => {
+        if (toeUpdates[axle].corners[wheel].cornerKey == cornerKey) {
+          toeUpdates[axle].corners[wheel].frontOfWheel = frontOfWheel;
+          toeUpdates[axle].corners[wheel].rearOfWheel = rearOfWheel;
         }
       });
     });
@@ -78,17 +80,30 @@ export default function Home() {
     setVehicle({ ...vehicle, toeSetup: toeUpdates });
   };
 
+  const handleWheelDiameterChange = (
+    axleKey: string,
+    newWheelDiameter: number
+  ) => {
+    const toeUpdates = { ...vehicle.toeSetup };
+
+    toeUpdates[axleKey].wheelDiameter = newWheelDiameter;
+
+    setVehicle({ ...vehicle, toeSetup: toeUpdates });
+  };
+
   return (
     <main className="flex flex-col items-center justify-center gap-10 h-screen">
       <AxleToe
         axle={vehicle.toeSetup["FRONT"]}
         handleWheelMeasurementChange={handleWheelMeasurementChange}
         handleTargetToeChange={handleTargetToeChange}
+        handleWheelDiameterChange={handleWheelDiameterChange}
       />
       <AxleToe
         axle={vehicle.toeSetup["REAR"]}
         handleWheelMeasurementChange={handleWheelMeasurementChange}
         handleTargetToeChange={handleTargetToeChange}
+        handleWheelDiameterChange={handleWheelDiameterChange}
       />
     </main>
   );

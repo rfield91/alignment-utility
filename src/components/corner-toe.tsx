@@ -1,6 +1,7 @@
 import { CornerStatus } from "@/components/corner-status";
+import { CornerVisual } from "@/components/corner-visual";
 import { WheelMeasurement } from "@/components/wheel-measurement";
-import { WheelConfiguration } from "@/types/types";
+import { CornerConfiguration } from "@/types/types";
 import {
   getToeDetailsFromMeasurement,
   getToeDetailsFromTarget,
@@ -8,7 +9,8 @@ import {
 } from "@/utilities/toe-calculations";
 
 type WheelToeProps = {
-  wheelConfiguration: WheelConfiguration;
+  wheelDiameter: number;
+  cornerConfiguration: CornerConfiguration;
   targetToeHalf: number;
   onChange: (
     cornerKey: string,
@@ -17,8 +19,9 @@ type WheelToeProps = {
   ) => void;
 };
 
-export const WheelToe = ({
-  wheelConfiguration,
+export const CornerToe = ({
+  wheelDiameter,
+  cornerConfiguration: wheelConfiguration,
   onChange,
   targetToeHalf,
 }: WheelToeProps) => {
@@ -28,10 +31,15 @@ export const WheelToe = ({
   const measuredDetails = getToeDetailsFromMeasurement(
     wheelConfiguration.frontOfWheel,
     wheelConfiguration.rearOfWheel,
-    toeInDirection
+    toeInDirection,
+    wheelDiameter
   );
 
-  const targetDetails = getToeDetailsFromTarget(targetToeHalf, toeInDirection);
+  const targetDetails = getToeDetailsFromTarget(
+    targetToeHalf,
+    toeInDirection,
+    wheelDiameter
+  );
 
   const requiredChange = getToeRequiredChangeDetails(
     measuredDetails,
@@ -40,6 +48,7 @@ export const WheelToe = ({
 
   if (wheelConfiguration.cornerKey === "RF") {
     console.log(measuredDetails, requiredChange);
+    console.log(256 - wheelDiameter * wheelDiameter);
   }
 
   return (
@@ -56,12 +65,12 @@ export const WheelToe = ({
           Current: {(measuredDetails.value / 25.4).toFixed(3)}&quot;{" "}
           {measuredDetails.direction}
         </div>
-        {/* <div>
+        <div>
           <CornerStatus
-            status={status}
-            text={changeDirectionLookup[requiredToeChangeDirection]}
+            magnitude={requiredChange.magnitude}
+            text={requiredChange.direction}
           />
-        </div> */}
+        </div>
       </div>
       <div
         className={`flex justify-between lg:gap-10 ${
@@ -92,26 +101,16 @@ export const WheelToe = ({
             }
           />
         </div>
-        <div className="grid mx-auto items-center">
-          <div
-            className="h-32 w-16 lg:h-64 lg:w-36 col-start-1 row-start-1 bg-green-400 "
-            style={{ transform: `rotate(${targetDetails.degrees}deg)` }}
-          ></div>
-          <div
-            className="h-32 w-16 lg:h-64 lg:w-36 col-start-1 row-start-1 bg-gray-800 flex items-center justify-center transition-all"
-            style={{ transform: `rotate(${measuredDetails.degrees}deg)` }}
-          >
-            <div>
-              <CornerStatus
-                magnitude={requiredChange.magnitude}
-                text={requiredChange.direction}
-              />
-            </div>
-          </div>
+        <div className="flex items-center">
+          <CornerVisual
+            wheelDiameter={wheelDiameter}
+            targetDetails={targetDetails}
+            measuredDetails={measuredDetails}
+          />
         </div>
       </div>
     </div>
   );
 };
 
-export default WheelToe;
+export default CornerToe;

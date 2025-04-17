@@ -1,4 +1,4 @@
-export type WheelConfiguration = {
+export type CornerConfiguration = {
   cornerKey: string;
   cornerName: string;
   frontOfWheel: number;
@@ -7,8 +7,9 @@ export type WheelConfiguration = {
 
 export type AxleConfiguration = {
   axleKey: string;
-  wheels: {
-    [key: string]: WheelConfiguration;
+  wheelDiameter: number;
+  corners: {
+    [key: string]: CornerConfiguration;
   };
   targetToe: number;
 };
@@ -23,6 +24,11 @@ export type ToeDetails = {
   degrees: number | undefined;
   direction: string;
   value: number;
+};
+
+export type RequiredChange = {
+  direction: string;
+  magnitude: ChangeMagnitude;
 };
 
 export type ChangeDirection = "MATCH" | "ADDTOEIN" | "ADDTOEOUT";
